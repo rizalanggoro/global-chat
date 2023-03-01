@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Application</title>
+
+    <!-- import tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- import alpine js -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.11.1/dist/cdn.min.js"
+    ></script>
+  </head>
+  <body x-data="" class="bg-gray-100 overflow-hidden">
+    <div class="fixed bottom-0 w-screen">
+      <!-- bubble send message -->
+      <div class="flex items-center mx-4 mb-4">
+        <textarea
+          id="input-message"
+          type="text"
+          placeholder="Masukkan pesan"
+          class="py-2 px-4 rounded border w-full flex-1 resize-none"
+        ></textarea>
+
+        <button
+          class="bg-indigo-600 rounded shadow py-2 px-4 text-white ml-2"
+          @click="$store.globalChat.send()"
+        >
+          Kirim
+        </button>
+      </div>
+    </div>
+
+    <div class="p-4 absolute w-full">
+      <p class="text-xl font-bold">Global Chat</p>
+
+      <div class="mt-4">
+        <input
+          id="input-name"
+          value="Rizal"
+          type="text"
+          placeholder="Masukkan nama"
+          class="border rounded py-2 px-4 w-full"
+        />
+      </div>
+    </div>
+
+    <!-- todo: list message -->
+    <div class="h-screen overflow-y-auto px-4">
+      <template x-for="(chat, index) in $store.globalChat.listChat">
+        <div class="flex">
+          <div
+            x-bind:class="$store.globalChat.isMe(chat.name) ? 'flex-1' : ''"
+          ></div>
+          <div
+            class="rounded-lg shadow w-fit py-2 px-3"
+            x-bind:class="[($store.globalChat.isMe(chat.name) ? 'bg-indigo-100' : 'bg-white'), (index == 0 ? 'mt-32' : 'mt-2'), (index == $store.globalChat.listChat.length - 1 ? 'mb-32' : '')]"
+          >
+            <p x-text="chat.name" class="text-sm font-semibold"></p>
+            <p x-text="chat.message"></p>
+            <p
+              class="text-xs text-gray-600 w-full text-right"
+              x-data="{date: new Date(chat.date)}"
+              x-text="date.getHours() + '.' + date.getMinutes()"
+            ></p>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <script src="./global-chat-store.js"></script>
+  </body>
+</html>
